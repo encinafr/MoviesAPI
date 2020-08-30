@@ -13,6 +13,8 @@ namespace MoviesAPI.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<Gender, GenderDTO>().ReverseMap();
+            CreateMap<CreateGenderDTO, Gender>();
+
         }
     }
 }
