@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Entities;
+using Domain.Entities;
 using MoviesAPI.Dtos;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace MoviesAPI.Helpers
         {
             CreateMap<Gender, GenderDTO>().ReverseMap();
             CreateMap<CreateGenderDTO, Gender>();
+            CreateMap<Actor, ActorDTO>().ReverseMap();
+            CreateMap<ActorCreateDto, Actor>();
 
         }
     }
