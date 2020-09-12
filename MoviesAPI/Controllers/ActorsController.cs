@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Domain.Entities;
 using Domain.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesAPI.Dtos;
+using MoviesAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,9 +31,11 @@ namespace MoviesAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ActorDTO>>> Get()
+        public async Task<ActionResult<List<ActorDTO>>> Get([FromQuery] PaginationDto pagination)
         {
-            var actors = await _context.Actors.ToListAsync();  
+            var queryable = _context.Actors.AsQueryable();
+            await HttpContext.InsertParamsPagination(queryable, pagination.RecordsPerPage);
+            var actors = await queryable.Paginate(pagination).ToListAsync();  
 
             return _mapper.Map<List<ActorDTO>>(actors); ;
         }
@@ -97,12 +101,35 @@ namespace MoviesAPI.Controllers
 
                 }
             }
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<ActorPatchDto> patchDocument)
+        {
+            if (patchDocument == null)
+                return BadRequest();
+
+            var actor = await _context.Actors.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (actor == null)
+                return NotFound();
+
+            var actorDto = _mapper.Map<ActorPatchDto>(actor);
+
+            patchDocument.ApplyTo(actorDto, ModelState);
+
+            bool isValid = TryValidateModel(actor);
+
+            if (!isValid)
+                return BadRequest(ModelState);
+
+            _mapper.Map(actorDto, actor);
 
             await _context.SaveChangesAsync();
 
             return NoContent();
-
         }
 
 
