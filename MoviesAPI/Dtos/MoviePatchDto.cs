@@ -13,6 +13,6 @@ namespace MoviesAPI.Dtos
         public string Title { get; set; }
         public bool InTheaters { get; set; }
         public DateTime ReleaseDate { get; set; }
-
+        public List<int> GendersId { get; set; }
     }
 }
