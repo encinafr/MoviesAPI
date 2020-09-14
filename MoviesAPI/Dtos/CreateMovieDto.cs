@@ -9,14 +9,15 @@ using System.Threading.Tasks;
 
 namespace MoviesAPI.Dtos
 {
-    public class ActorCreateDto
+    public class CreateMovieDto
     {
         [Required]
-        [StringLength(120)]
-        public string Name { get; set; }
-        public DateTime DateBirth { get; set; }
+        [MaxLength(300)]
+        public string Title { get; set; }
+        public bool InTheaters { get; set; }
+        public DateTime ReleaseDate { get; set; }
         [PhotoWeightValidation(maxWeightMG: 4)]
         [FileTypeValidation(FileTypeGruopEnum.Image)]
-        public IFormFile Photo { get; set; }
+        public IFormFile Poster { get; set; }
     }
 }
