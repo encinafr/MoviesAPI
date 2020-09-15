@@ -1,4 +1,6 @@
 ﻿
+using Domain.Entities;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities
@@ -9,5 +11,8 @@ namespace Core.Entities
         [Required]
         [StringLength(40)]
         public string Name { get; set; }
+        public List<MovieGenders> MovieGenders { get; set; }
+
+
     }
 }

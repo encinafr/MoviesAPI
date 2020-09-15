@@ -3,8 +3,6 @@ using MoviesAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MoviesAPI.Dtos
 {
@@ -15,7 +13,6 @@ namespace MoviesAPI.Dtos
         public string Title { get; set; }
         public bool InTheaters { get; set; }
         public DateTime ReleaseDate { get; set; }
-        [ModelBinder(BinderType = typeof(TypeBinder))]
-        public List<int> GendersId { get; set; }
+
     }
 }

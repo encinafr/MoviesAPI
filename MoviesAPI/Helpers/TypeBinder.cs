@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoviesAPI.Helpers
 {
-    public class TypeBinder : IModelBinder
+    public class TypeBinder<T> : IModelBinder
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -18,7 +18,7 @@ namespace MoviesAPI.Helpers
 
             try
             {
-                var deserializedObject = JsonConvert.DeserializeObject<List<int>>(valueProvider.FirstValue);
+                var deserializedObject = JsonConvert.DeserializeObject<T>(valueProvider.FirstValue);
                 bindingContext.Result = ModelBindingResult.Success(deserializedObject);
             }
             catch (Exception)

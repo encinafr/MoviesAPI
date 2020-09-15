@@ -66,6 +66,7 @@ namespace MoviesAPI.Controllers
                 }
             }
 
+            AssignActorsOrder(movie);
             _dbContext.Add(movie);
             await _dbContext.SaveChangesAsync();
 
@@ -77,7 +78,10 @@ namespace MoviesAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put([FromForm] CreateMovieDto createMovieDto, int id)
         {
-            var movie = await _dbContext.Actors.FirstOrDefaultAsync(x => x.Id == id);
+            var movie = await _dbContext.Movies.
+                        Include(x => x.MovieActors)
+                        .Include(x => x.MovieGenders)
+                        .FirstOrDefaultAsync(x => x.Id == id);
 
             if (movie == null)
                 return NotFound();
@@ -92,11 +96,12 @@ namespace MoviesAPI.Controllers
                     await createMovieDto.Poster.CopyToAsync(memoryStream);
                     var content = memoryStream.ToArray();
                     var extension = Path.GetExtension(createMovieDto.Poster.FileName);
-                    movie.Photo = await _fileStore.EditFile(content, extension, container,
-                                                           movie.Photo, createMovieDto.Poster.ContentType);
+                    movie.Poster = await _fileStore.EditFile(content, extension, container,
+                                                           movie.Poster, createMovieDto.Poster.ContentType);
 
                 }
             }
+            AssignActorsOrder(movie);
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
@@ -141,5 +146,18 @@ namespace MoviesAPI.Controllers
 
             return NoContent();
         }
+
+        #region Private
+        private void AssignActorsOrder(Movie movie)
+        {
+            if (movie.MovieActors != null)
+            {
+                for (int i = 0; i < movie.MovieActors.Count; i++)
+                {
+                    movie.MovieActors[i].Order = i;
+                }
+            }
+        }
+        #endregion
     }
 }

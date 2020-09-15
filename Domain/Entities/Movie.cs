@@ -14,5 +14,7 @@ namespace Domain.Entities
         public bool  InTheaters { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Poster { get; set; }
+        public List<MovieActors> MovieActors { get; set; }
+        public List<MovieGenders> MovieGenders { get; set; }
     }
 }
